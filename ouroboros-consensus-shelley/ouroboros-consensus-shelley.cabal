@@ -63,6 +63,7 @@ library
                      , transformers
 
                        -- cardano-ledger-specs
+                     , cardano-ledger-alonzo
                      , cardano-ledger-shelley-ma
                      , cardano-ledger-alonzo
                      , shelley-spec-ledger
