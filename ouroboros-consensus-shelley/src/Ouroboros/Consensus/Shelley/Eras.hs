@@ -46,6 +46,8 @@ import           Ouroboros.Consensus.Shelley.Protocol.Crypto (StandardCrypto)
 import qualified Shelley.Spec.Ledger.API as SL
 import qualified Shelley.Spec.Ledger.BaseTypes as SL
 
+import           Ouroboros.Consensus.Shelley.ALONZOSTUB
+
 {-------------------------------------------------------------------------------
   Eras instantiated with standard crypto
 -------------------------------------------------------------------------------}
