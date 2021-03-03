@@ -47,13 +47,15 @@ import           Codec.CBOR.Encoding (Encoding)
 import qualified Codec.CBOR.Encoding as CBOR
 import           Codec.Serialise (decode, encode)
 import           Control.Monad.Except
+import qualified Data.ByteString.Lazy as Lazy
 import           Data.Functor.Identity
 import           Data.Word
 import           GHC.Generics (Generic)
 import           GHC.Records
 import           NoThunks.Class (NoThunks (..))
 
-import           Cardano.Binary (FromCBOR (..), ToCBOR (..), enforceSize)
+import           Cardano.Binary (Annotator (..), FromCBOR (..),
+                     FullByteString (..), ToCBOR (..), enforceSize)
 import           Cardano.Slotting.EpochInfo
 
 import           Ouroboros.Consensus.Block
@@ -492,19 +494,20 @@ encodeShelleyLedgerState
 
 decodeShelleyLedgerState ::
      forall era s. ShelleyBasedEra era
-  => Decoder s (LedgerState (ShelleyBlock era))
-decodeShelleyLedgerState = decodeVersion [
+  => Decoder s (Lazy.ByteString -> LedgerState (ShelleyBlock era))
+decodeShelleyLedgerState =
+  (. Full) . runAnnotator <$>
+    decodeVersion [
       (serialisationFormatVersion2, Decode decodeShelleyLedgerState2)
     ]
   where
-    decodeShelleyLedgerState2 :: Decoder s' (LedgerState (ShelleyBlock era))
+    decodeShelleyLedgerState2 :: Decoder s' (Annotator (LedgerState (ShelleyBlock era)))
     decodeShelleyLedgerState2 = do
       enforceSize "LedgerState ShelleyBlock" 3
-      shelleyLedgerTip        <- decodeWithOrigin decodeShelleyTip
+      shelleyLedgerTip        <- pure <$> decodeWithOrigin decodeShelleyTip
       shelleyLedgerState      <- fromCBOR
-      shelleyLedgerTransition <- decodeShelleyTransition
-      return ShelleyLedgerState {
-          shelleyLedgerTip
-        , shelleyLedgerState
-        , shelleyLedgerTransition
-        }
+      shelleyLedgerTransition <- pure <$> decodeShelleyTransition
+      return $ ShelleyLedgerState
+                 <$> shelleyLedgerTip
+                 <*> shelleyLedgerState
+                 <*> shelleyLedgerTransition
