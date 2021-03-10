@@ -53,7 +53,8 @@ import           GHC.Generics (Generic)
 import           GHC.Records
 import           NoThunks.Class (NoThunks (..))
 
-import           Cardano.Binary (FromCBOR (..), ToCBOR (..), enforceSize)
+import           Cardano.Binary (Annotator (..), FromCBOR (..),
+                     FullByteString (..), ToCBOR (..), enforceSize)
 import           Cardano.Slotting.EpochInfo
 
 import           Ouroboros.Consensus.Block
@@ -484,7 +485,7 @@ encodeShelleyLedgerState
                        , shelleyLedgerTransition
                        } =
     encodeVersion serialisationFormatVersion2 $ mconcat [
-        CBOR.encodeListLen 2
+        CBOR.encodeListLen 3
       , encodeWithOrigin encodeShelleyTip shelleyLedgerTip
       , toCBOR shelleyLedgerState
       , encodeShelleyTransition shelleyLedgerTransition
@@ -497,11 +498,12 @@ decodeShelleyLedgerState = decodeVersion [
       (serialisationFormatVersion2, Decode decodeShelleyLedgerState2)
     ]
   where
+    forgetAnnotator d = (\x -> runAnnotator x (Full mempty)) <$> d
     decodeShelleyLedgerState2 :: Decoder s' (LedgerState (ShelleyBlock era))
     decodeShelleyLedgerState2 = do
-      enforceSize "LedgerState ShelleyBlock" 2
+      enforceSize "LedgerState ShelleyBlock" 3
       shelleyLedgerTip        <- decodeWithOrigin decodeShelleyTip
-      shelleyLedgerState      <- fromCBOR
+      shelleyLedgerState      <- forgetAnnotator fromCBOR
       shelleyLedgerTransition <- decodeShelleyTransition
       return ShelleyLedgerState {
           shelleyLedgerTip
