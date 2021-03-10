@@ -35,6 +35,8 @@ import qualified Cardano.Ledger.Alonzo.PParams
 import qualified Cardano.Ledger.Core as LC
 import           Cardano.Ledger.Era (Crypto)
 import           Cardano.Ledger.Mary (MaryEra)
+import           Cardano.Ledger.Alonzo (AlonzoEra)
+import qualified Cardano.Ledger.Alonzo.PParams
 import           Cardano.Ledger.Shelley (ShelleyEra)
 import           Control.State.Transition (State)
 
@@ -42,14 +44,6 @@ import qualified Cardano.Ledger.Shelley.Constraints as SL
 import           Ouroboros.Consensus.Shelley.Protocol.Crypto (StandardCrypto)
 import qualified Shelley.Spec.Ledger.API as SL
 import qualified Shelley.Spec.Ledger.BaseTypes as SL
-
--- | Temporary workaround
--- Currently AlonzoEra from 'cardano-ledger-alonzo' is not ready to be used
--- We use this type alias to temporarily work around this issue.
--- Once 'AlonzoEra' from 'cardano-ledger-alonzo' is ready we will remove
--- this workaround and replace it with the proper one from
--- the 'import Cardano.Ledger.Alonzo (AlonzoEra)''
-type AlonzoEra c = MaryEra c
 
 {-------------------------------------------------------------------------------
   Eras instantiated with standard crypto
