@@ -148,7 +148,7 @@ jobs:
         done
 
     - name: Build projects [build]
-      run: cabal --builddir="$CABAL_BUILDDIR" build all
+      run: cabal --builddir="$CABAL_BUILDDIR" build -j1 all
 
     # Test Win32 specific packages
 
