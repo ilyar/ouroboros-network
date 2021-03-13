@@ -19,14 +19,13 @@ module Ouroboros.Network.MockNode where
 import           Control.Exception (assert)
 import           Control.Monad
 import           Data.Hashable
-import           Data.List hiding (inits)
 import           Data.Maybe (catMaybes)
 import           Data.Tuple (swap)
 import           GHC.Generics (Generic)
 
 import           Control.Monad.Class.MonadFork
-import           Control.Monad.Class.MonadSay
 import           Control.Monad.Class.MonadSTM.Strict
+import           Control.Monad.Class.MonadSay
 import           Control.Monad.Class.MonadThrow
 import           Control.Monad.Class.MonadTimer
 import           Control.Tracer (nullTracer)
@@ -56,6 +55,8 @@ import           Ouroboros.Network.Protocol.ChainSync.Type
 import           Ouroboros.Network.Testing.ConcreteBlock hiding (fixupBlock)
 import qualified Ouroboros.Network.Testing.ConcreteBlock as Concrete
 
+import qualified Data.List as L
+
 data NodeId = CoreId Int
             | RelayId Int
   deriving (Eq, Ord, Show, Generic)
@@ -79,7 +80,7 @@ longestChainSelection candidateChainVars cpsVar =
       candidateChains <- mapM readTVar candidateChainVars
       cps@ChainProducerState{chainState = chain} <- readTVar cpsVar
       let -- using foldl' since @Chain.selectChain@ is left biased
-          chain' = foldl' Chain.selectChain chain (catMaybes candidateChains)
+          chain' = L.foldl' Chain.selectChain chain (catMaybes candidateChains)
       if Chain.headPoint chain' == Chain.headPoint chain
         then retry
         else writeTVar cpsVar (switchFork chain' cps)

@@ -27,6 +27,14 @@ common base
 common project-config
   default-language:     Haskell2010
 
+  ghc-options:          -Wall
+                        -Wcompat
+                        -Widentities
+                        -Wincomplete-record-updates
+                        -Wincomplete-uni-patterns
+                        -Wmissing-export-lists
+                        -Wpartial-fields
+
   ghc-options:          -Werror
 
   if impl(ghc >= 8.10)
@@ -330,14 +338,6 @@ library
      build-depends:    unix
                      , unix-bytestring
 
-  ghc-options:         -Wall
-                       -Wcompat
-                       -Wincomplete-uni-patterns
-                       -Wincomplete-record-updates
-                       -Wpartial-fields
-                       -Widentities
-                       -Wredundant-constraints
-                       -Wmissing-export-lists
   -- Pattern match checking has improved since 8.6.5. GHC now considers more
   -- pattern matches as redundant than before, so disable this warning for older
   -- versions of GHC that still consider them incomplete.

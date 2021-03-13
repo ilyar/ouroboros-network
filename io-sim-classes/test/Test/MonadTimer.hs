@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP                #-}
 {-# LANGUAGE MultiWayIf         #-}
 {-# LANGUAGE NumericUnderscores #-}
 
@@ -5,12 +6,14 @@ module Test.MonadTimer
   ( tests
   ) where
 
+#if !(MIN_VERSION_base(4,13,0))
 import           Control.Monad.Class.MonadTime (DiffTime)
+#endif
+
 import           Control.Monad.Class.MonadTimer
 import           GHC.Real
 
 import           Test.QuickCheck
-import           Test.QuickCheck.Gen
 import           Test.Tasty
 import           Test.Tasty.QuickCheck (testProperty)
 
@@ -68,7 +71,7 @@ instance Arbitrary DiffTimeDistr where
     shrink (DiffTimeDistr a) = (DiffTimeDistr . fromRational) `map` shrink (toRational a)
 
 prop_diffTimeToMicrosecondsAsIntRightInverse :: DiffTimeDistr -> Property
-prop_diffTimeToMicrosecondsAsIntRightInverse (DiffTimeDistr a) = 
+prop_diffTimeToMicrosecondsAsIntRightInverse (DiffTimeDistr a) =
     label (labelRational (toRational a)) $
       abs (toRational a - a') < (1 :% 1_000_000)
       .&&.

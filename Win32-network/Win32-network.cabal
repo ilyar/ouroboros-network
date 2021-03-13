@@ -23,6 +23,13 @@ common base
 common project-config
   default-language:     Haskell2010
 
+  ghc-options:          -Wall
+                        -Wcompat
+                        -Wincomplete-uni-patterns
+                        -Wincomplete-record-updates
+                        -Wpartial-fields
+                        -Wredundant-constraints
+
   ghc-options:          -Werror
 
 library
@@ -54,13 +61,7 @@ library
 
     exposed-modules:   System.IOManager
 
-  ghc-options:         -Wall
-                       -Wcompat
-                       -Wincomplete-uni-patterns
-                       -Wincomplete-record-updates
-                       -Wpartial-fields
-                       -Widentities
-                       -Wredundant-constraints
+  ghc-options:          -Widentities
 
 executable named-pipe-demo
   import:               base, project-config
@@ -75,7 +76,7 @@ executable named-pipe-demo
   if os(windows) && impl(ghc < 8.10)
     build-depends:      binary
 
-  ghc-options:          -Wall
+  ghc-options:          -Widentities
 
   ghc-options:          -threaded
 
@@ -106,7 +107,5 @@ test-suite test
                          quickcheck-instances,
                          Win32,
                          Win32-network
-
-  ghc-options:          -Wall
 
   ghc-options:          -threaded

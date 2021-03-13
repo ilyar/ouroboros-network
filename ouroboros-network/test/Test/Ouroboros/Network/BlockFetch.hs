@@ -12,7 +12,6 @@ import           Test.Tasty (TestTree, testGroup)
 import           Test.Tasty.HUnit
 import           Test.Tasty.QuickCheck (testProperty)
 
-import           Data.List
 import           Data.Map (Map)
 import qualified Data.Map as Map
 import           Data.Maybe (mapMaybe)
@@ -32,7 +31,6 @@ import           Control.Monad.IOSim
 import           Control.Tracer (Tracer (Tracer), contramap, nullTracer)
 
 --TODO: could re-export some of the trace types from more convenient places:
-import           Ouroboros.Network.Driver (TraceSendRecv)
 import           Ouroboros.Network.AnchoredFragment (AnchoredFragment)
 import qualified Ouroboros.Network.AnchoredFragment as AnchoredFragment
 import           Ouroboros.Network.Block
@@ -40,6 +38,7 @@ import           Ouroboros.Network.BlockFetch
 import           Ouroboros.Network.BlockFetch.ClientRegistry
 import           Ouroboros.Network.BlockFetch.ClientState
 import           Ouroboros.Network.BlockFetch.Examples
+import           Ouroboros.Network.Driver (TraceSendRecv)
 import qualified Ouroboros.Network.MockChain.Chain as Chain
 import           Ouroboros.Network.Mux (ControlMessage (..), continueForever)
 import           Ouroboros.Network.Protocol.BlockFetch.Type (BlockFetch)
@@ -47,6 +46,7 @@ import           Ouroboros.Network.Testing.ConcreteBlock
 
 import           Ouroboros.Network.Testing.Utils
 
+import qualified Data.List as L
 
 --
 -- The list of all tests
@@ -332,10 +332,10 @@ tracePropertyNoDuplicateBlocksBetweenPeers fork1 fork2 es =
     Map.findWithDefault Set.empty 2 requestedFetchPoints
 
   where
-    hasDupes = not . null . filter ((>1) . length)  . group . sort
+    hasDupes = not . null . filter ((>1) . L.length) . L.group . L.sort
 
     requiredFetchPoints =
-      nub (chainPoints fork1 ++ chainPoints fork2)
+      L.nub (chainPoints fork1 ++ chainPoints fork2)
 
     requestedFetchPoints :: Map Int (Set (Point BlockHeader))
     requestedFetchPoints =
@@ -658,7 +658,7 @@ prop_terminate (TestChainFork _commonChain forkChain _forkChain) (Delay delay) =
       -- from 'runPipelinedPeerWithLimits'.
       -- threadDelay 60
       return $ case result of
-        Left _ -> False
+        Left _  -> False
         Right _ -> True
 
     fork'  = chainToAnchoredFragment forkChain

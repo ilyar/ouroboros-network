@@ -42,7 +42,6 @@ module Control.Monad.IOSim (
 import           Prelude
 
 import           Data.Dynamic (fromDynamic)
-import           Data.List (intercalate)
 import           Data.Typeable (Typeable)
 
 import           Control.Exception (throw)
@@ -54,6 +53,7 @@ import           Control.Monad.Class.MonadTime
 
 import           Control.Monad.IOSim.Internal
 
+import qualified Data.List as L
 
 selectTraceEvents
     :: (TraceEvent -> Maybe b)
@@ -117,12 +117,12 @@ instance Exception Failure where
     displayException (FailureException err) = displayException  err
     displayException (FailureDeadlock threads) =
       concat [ "<<io-sim deadlock: "
-             , intercalate ", " (show `map` threads)
+             , L.intercalate ", " (show `map` threads)
              , ">>"
              ]
     displayException (FailureSloppyShutdown threads) =
       concat [ "<<io-sim sloppy shutdown: "
-             , intercalate ", " (show `map` threads)
+             , L.intercalate ", " (show `map` threads)
              , ">>"
              ]
 

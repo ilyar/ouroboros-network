@@ -22,6 +22,16 @@ common base
 common project-config
   default-language:     Haskell2010
 
+  ghc-options:          -Wall
+                        -Wcompat
+                        -Widentities
+                        -Wincomplete-record-updates
+                        -Wincomplete-uni-patterns
+                        -Wmissing-export-lists
+                        -Wno-unticked-promoted-constructors
+                        -Wpartial-fields
+                        -Wredundant-constraints
+
   ghc-options:          -Werror
 
   if impl(ghc >= 8.10)
@@ -47,16 +57,6 @@ library
                      , ouroboros-consensus
                      , ouroboros-consensus-mock
                      , ouroboros-consensus-test
-
-  ghc-options:         -Wall
-                       -Wcompat
-                       -Wincomplete-uni-patterns
-                       -Wincomplete-record-updates
-                       -Wpartial-fields
-                       -Widentities
-                       -Wredundant-constraints
-                       -Wmissing-export-lists
-                       -Wno-unticked-promoted-constructors
 
   ghc-options:         -fno-ignore-asserts
 
@@ -88,15 +88,6 @@ test-suite test
                      , ouroboros-consensus-mock
                      , ouroboros-consensus-mock-test
                      , ouroboros-consensus-test
-
-  ghc-options:         -Wall
-                       -Wcompat
-                       -Wincomplete-uni-patterns
-                       -Wincomplete-record-updates
-                       -Wpartial-fields
-                       -Widentities
-                       -Wredundant-constraints
-                       -Wmissing-export-lists
 
   ghc-options:         -fno-ignore-asserts
 

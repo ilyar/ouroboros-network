@@ -1,10 +1,10 @@
-{-# LANGUAGE RankNTypes          #-}
-{-# LANGUAGE FlexibleContexts    #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE RankNTypes       #-}
 module Test.Ouroboros.Network.Testing.Utils where
 
+import qualified Codec.CBOR.Read as CBOR
+import qualified Codec.CBOR.Term as CBOR
 import qualified Data.ByteString.Lazy as LBS
-import qualified Codec.CBOR.Read      as CBOR
-import qualified Codec.CBOR.Term      as CBOR
 
 import           Ouroboros.Network.Codec
 
@@ -24,7 +24,6 @@ splits3 bs =
 prop_codec_cborM
   :: forall ps m.
      ( Monad m
-     , Eq (AnyMessage ps)
      )
   => Codec ps CBOR.DeserialiseFailure m LBS.ByteString
   -> AnyMessageAndAgency ps

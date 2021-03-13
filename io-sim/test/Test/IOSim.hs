@@ -33,7 +33,6 @@ import           Test.QuickCheck
 import           Test.Tasty
 import           Test.Tasty.QuickCheck
 
-
 tests :: TestTree
 tests =
   testGroup "IO simulator"
